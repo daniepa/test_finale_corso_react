@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from 'react-router';
+import { BrowserRouter, Route, Routes, useNavigate } from 'react-router';
 scrollY;
 import App from '../App';
 import MainPage from '../components/MainPage/MainPage';
@@ -6,11 +6,13 @@ import { useEffect, useState } from 'react';
 import { ThemeContext } from '../context/ThemeContext';
 import Detail from '../components/Detail/Detail';
 import { RecipesContext } from '../context/RecipesContext';
+import AddRecipe from '../components/AddRecipe/AddRecipe';
 
 export default function AppRouter() {
   const [recipes, setRecipes] = useState(null);
   const [darkLight, setDarkLight] = useState('light');
   const [count, setCount] = useState(0);
+  
 
   // carica i dati
   useEffect(() => {
@@ -20,7 +22,12 @@ export default function AppRouter() {
         const lsFavIds =
           JSON.parse(localStorage.getItem('fav-recipes-ids')) || [];
 
-        const newRecipes = data.map((r) => ({
+          const lsMyRecipes =
+          JSON.parse(localStorage.getItem('my-recipes')) || [];
+
+          const allRecipes = data.concat(lsMyRecipes);
+
+        const newRecipes = allRecipes.map((r) => ({
           ...r,
           isFavorite: lsFavIds.includes(r.id),
         }));
@@ -44,7 +51,9 @@ export default function AppRouter() {
     localStorage.setItem('dark-light', JSON.stringify(darkLight));
   }, [darkLight]);
 
+  // quando utente clicca sul cuore
   // tiene traccia dei preferiti
+  // li aggionra sul local storage
   useEffect(() => {
     if (recipes != null) {
       const favRecIsd = recipes.filter((r) => r.isFavorite).map((r) => r.id);
@@ -53,6 +62,27 @@ export default function AppRouter() {
       setCount(favRecIsd.length);
     }
   }, [recipes]);
+
+  // permette il refresh della pagina quando vine creato una nuova Recipe
+  function refreshPage() {
+    fetch('https://daniepa.github.io/fake-api-recipes/recipes.json')
+      .then((res) => res.json())
+      .then((data) => {
+        const lsFavIds =
+          JSON.parse(localStorage.getItem('fav-recipes-ids')) || [];
+
+          const lsMyRecipes =
+          JSON.parse(localStorage.getItem('my-recipes')) || [];
+
+          const allRecipes = data.concat(lsMyRecipes);
+
+        const newRecipes = allRecipes.map((r) => ({
+          ...r,
+          isFavorite: lsFavIds.includes(r.id),
+        }));
+        setRecipes(newRecipes);
+      });
+  }
 
   function toggleHeart(id) {
     const newRecipes = recipes.map((r) =>
@@ -109,6 +139,11 @@ export default function AppRouter() {
               >
                 <Route path=":id" element={<App></App>} />
               </Route>
+              <Route 
+              path="add-recipe"
+              element={<App>
+                <AddRecipe refreshPage={refreshPage} />
+              </App>} />
             </Routes>
           </BrowserRouter>
         </RecipesContext.Provider>

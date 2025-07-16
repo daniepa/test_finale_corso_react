@@ -8,7 +8,7 @@ import Favorite from '../Favorite/Favorite';
 export default function Detail({ toggleHeart }) {
   const { id } = useParams();
   const { recipes } = useContext(RecipesContext);
-  const recipe = recipes.find((r) => r.id === id);
+  const recipe = recipes.find((r) => r.id.toString() === id.toString());
   const { darkLight } = useContext(ThemeContext);
   const isDark = darkLight === 'light' ? false : true;
 
@@ -17,7 +17,7 @@ export default function Detail({ toggleHeart }) {
   return (
     <>
       <h2 style={{ color: isDark ? 'white' : 'black' }}>
-        dettagli ricetta {id}:
+        dettagli ricetta:
       </h2>
       <div
         className={

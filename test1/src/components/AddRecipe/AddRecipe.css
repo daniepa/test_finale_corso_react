@@ -1,0 +1,23 @@
+.card-form-add-recipe {
+  box-shadow: 2px 2px 10px black;
+  color: blue;
+  width: 80%;
+  min-height: 42px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+  padding: 24px;
+}
+label {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+label input {
+    width: 70%;
+}

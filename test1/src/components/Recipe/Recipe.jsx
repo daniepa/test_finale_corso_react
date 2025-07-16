@@ -19,11 +19,20 @@ export default function Recipe({ recipe, toggleHeart }) {
           <p>{recipe.title}</p>
         </Link>
 
-        <Favorite
-          id={recipe.id}
-          isFavorite={recipe.isFavorite}
-          toggleHeart={toggleHeart}
-        />
+        <div>
+
+          <Favorite
+            id={recipe.id}
+            isFavorite={recipe.isFavorite}
+            toggleHeart={toggleHeart}
+          />
+
+          {recipe.id.toString().length > 1 && (
+            <>
+              {/* <span onClick={() => { }}>❌</span> */}
+            </>
+          )}
+        </div>
       </div>
     </>
   );
